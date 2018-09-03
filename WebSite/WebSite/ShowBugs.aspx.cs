@@ -9,11 +9,13 @@ namespace WebSite
 {
     public partial class ShowBugs : System.Web.UI.Page
     {
-        protected void Page_Load (object sender, EventArgs e)
+        private string _userIDStr;
+
+        protected void Page_Load (object aSender, EventArgs aEventArgs)
         {
-            string userIDStr = Request["userid"];
+            _userIDStr = Request["userid"];
             string errorStr = "";
-            List<BugInfo> bugs = DBUtility.instance().GetRecentBugs(userIDStr,
+            List<BugInfo> bugs = DBUtility.Instance().GetRecentBugs(_userIDStr,
                                                                     ref errorStr);
 
             if (errorStr.Length > 0)
@@ -24,6 +26,11 @@ namespace WebSite
             {
                 NoBugs.Text = "You didn't report any bugs yet.";
             }
+        }
+
+        protected void ReportBug (object aSender, EventArgs aEventArgs)
+        {
+            Response.Redirect("ReportBug.aspx?userid=" + _userIDStr);
         }
     }
 }

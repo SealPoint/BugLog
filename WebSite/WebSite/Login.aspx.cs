@@ -38,7 +38,7 @@ namespace WebSite
             {
                 // Connect to DB and search for the user.
                 string errorStr = "";
-                int userID = DBUtility.instance().GetUserID(Email.Text,
+                int userID = DBUtility.Instance().GetUserID(Email.Text,
                                                             Password.Text,
                                                             ref errorStr);
 

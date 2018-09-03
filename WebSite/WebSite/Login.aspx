@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title>BugLog Login</title>
-    <style>
+    <style type="text/css">
         .body
         {
             background-color: #7092BE;

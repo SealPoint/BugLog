@@ -19,7 +19,7 @@ namespace WebSite
         /// Returns the only instance of this class
         /// </summary>
         /// <returns></returns>
-        public static DBUtility instance ()
+        public static DBUtility Instance()
         {
             if (_instance == null)
             {
@@ -37,7 +37,7 @@ namespace WebSite
         /// in WebConfig.xml</param>
         /// <returns>The value of the config parameter if it is
         /// defined in WebConfig.xml, otherwise null </returns>
-        private string getConfigValue (string aConfigParamName)
+        private string GetConfigValue(string aConfigParamName)
         {
             Configuration webConfig
                 = WebConfigurationManager.OpenWebConfiguration("/");
@@ -62,7 +62,7 @@ namespace WebSite
         /// </summary>
         /// <param name="aString"></param>
         /// <returns>The hash as a string</returns>
-        private string getHashCode (string aString)
+        private string GetHashCode(string aString)
         {
             int hash1 = 5381;
             int hash2 = hash1;
@@ -94,11 +94,11 @@ namespace WebSite
         /// <param name="aErrorStr">The description of a DB error</param>
         /// <returns>The user ID if the user exists in the DB, -1 otherwise
         /// </returns>
-        public int GetUserID (string aEmail,
+        public int GetUserID(string aEmail,
                               string aPassword,
                               ref string aErrorStr)
         {
-            string connStr = getConfigValue("ConnString");
+            string connStr = GetConfigValue("ConnString");
             int userID = -1;
 
             if (connStr == null)
@@ -116,7 +116,7 @@ namespace WebSite
                 string query = "SELECT [ID] FROM Users WHERE Email LIKE '"
                     + aEmail
                     + "' AND Password LIKE '"
-                    + getHashCode(aPassword)
+                    + GetHashCode(aPassword)
                     + "'";
                 SqlCommand command = new SqlCommand(query, connection);
                 SqlDataReader dataReader = command.ExecuteReader();
@@ -144,6 +144,7 @@ namespace WebSite
                 }
                 catch (Exception ex)
                 {
+                    aErrorStr += ex.Message;
                 }
             }
 
@@ -158,11 +159,11 @@ namespace WebSite
         /// <param name="aErrorStr">The description of a DB error</param>
         /// <returns>
         /// </returns>
-        public List<BugInfo> GetRecentBugs (string aUserID,
+        public List<BugInfo> GetRecentBugs(string aUserID,
                                   ref string aErrorStr)
         {
             List<BugInfo> bugs = new List<BugInfo>();
-            string connStr = getConfigValue("ConnString");
+            string connStr = GetConfigValue("ConnString");
 
             if (connStr == null)
             {
@@ -213,10 +214,69 @@ namespace WebSite
                 }
                 catch (Exception ex)
                 {
+                    aErrorStr += ex.Message;
                 }
             }
 
             return bugs;
+        }
+
+        //==============================================================
+        /// <summary>
+        /// Adds a new bug to the DB.
+        /// </summary>
+        /// <param name="aUserID">The ID of the user who reported the bug</param>
+        /// <param name="aTitle">The brief description of the bug</param>
+        /// <param name="aDescription">The steps to reproduce.</param>
+        /// <param name="aErrorStr">The description of a DB error</param>
+        public void ReportBug(string aUserID,
+                               string aTitle,
+                               string aDescription,
+                               ref string aErrorStr)
+        {
+            string connStr = GetConfigValue("ConnString");
+
+            if (connStr == null)
+            {
+                aErrorStr = "No connection string specified";
+                return;
+            }
+
+            SqlConnection connection = new SqlConnection(connStr);
+
+            try
+            {
+                connection.Open();
+
+                string query = "INSERT INTO Bugs(Title, Description)"
+                    + " VALUES('" + aTitle.Replace("'", "''")
+                    + "', '"
+                    + aDescription.Replace("'", "''")
+                    + "');"
+                    + " INSERT INTO ReportedBy(UserID, BugID)"
+                    + " SELECT "
+                    + aUserID
+                    + ", MAX([ID]) FROM Bugs";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.ExecuteNonQuery();
+
+                command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                aErrorStr = ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    aErrorStr += ex.Message;
+                }
+            }
         }
     }
 }

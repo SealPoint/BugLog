@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Login.aspx" />
+    <Content Include="ReportBug.aspx" />
     <Content Include="ShowBugs.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -68,6 +69,13 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportBug.aspx.cs">
+      <DependentUpon>ReportBug.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportBug.aspx.designer.cs">
+      <DependentUpon>ReportBug.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ShowBugs.aspx.cs">
       <DependentUpon>ShowBugs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

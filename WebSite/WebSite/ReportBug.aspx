@@ -1,10 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ShowBugs.aspx.cs" Inherits="WebSite.ShowBugs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReportBug.aspx.cs" Inherits="WebSite.ReportBug" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
-    <title>Show Bugs</title>
+    <title>Report a Bug</title>
     <style type="text/css">
         .body
         {
@@ -29,14 +29,30 @@
         .centralPad
         {
             position: absolute;
-            width: 300px;
+            width: 700px;
             height: 200px;
             z-index: 15;
-            top: 50%;
-            left: 50%;
+            top: 45%;
+            left: 40%;
             margin: -100px 0 0 -150px;
         }
-        
+        .title
+        {
+            width: 500px;
+        }
+        .subtitle
+        {
+            font-size: 12pt;
+        }
+        .gap
+        {
+            height: 30px;
+        }
+        .description
+        {
+            width: 500px;
+            height: 300px;
+        }
         .button
         {
             width: 150px;
@@ -48,18 +64,33 @@
 <body class="body">
     <form id="form1" runat="server">
         <div class="headerPad">
-            Your Bugs
+            Report a Bug
         </div>
         <div class="centralPad">
             <table border="0">
                 <tr>
+                    <td align="right">
+                    Bug Title:&nbsp;
+                    </td>
                     <td>
-                        <asp:Label id="NoBugs" runat="server" />
+                        <asp:TextBox runat="server" id="BugTitle" CssClass="title" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="subtitle">Please provide a brief description</td>
+                </tr>
+                <tr class="gap" />
+                <tr>
+                    <td valign="top">Steps to reproduce:&nbsp;</td>
+                    <td>
+                        <asp:TextBox TextMode="MultiLine" id="BugDescription" runat="server" CssClass="description" />
                     </td>
                 </tr>
                 <tr align="center">
+                    <td></td>
                     <td>
-                        <asp:Button id="submit" runat="server" Text="Report a Bug" CssClass="button" onClick="ReportBug" />
+                        <asp:Button ID="CreateBug" runat="server" Text="Report Bug" CssClass="button" OnClick="CreateNewBug" />
                     </td>
                 </tr>
             </table>
