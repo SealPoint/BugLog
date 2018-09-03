@@ -1,6 +1,6 @@
 USE [BugLog]
 GO
-/****** Object:  Table [dbo].[Bugs]    Script Date: 09/02/2018 18:38:18 ******/
+/****** Object:  Table [dbo].[Bugs]    Script Date: 09/03/2018 14:57:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
