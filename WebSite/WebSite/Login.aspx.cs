@@ -81,16 +81,17 @@ namespace WebSite
         /// </summary>
         /// <param name="aEmail">The e-mail</param>
         /// <param name="aPassword">The password</param>
-        /// <returns>True if the user exists in the DB, false otherwise
+        /// <returns>The user ID if the user exists in the DB, -1 otherwise
         /// </returns>
-        private bool ValidateUserInDB(string aEmail, string aPassword)
+        private int GetUserID(string aEmail, string aPassword)
         {
             string connStr = getConfigValue("ConnString");
+            int userID = -1;
 
             if (connStr == null)
             {
                 Response.Write("No connection string");
-                return false;
+                return userID;
             }
 
             SqlConnection connection = new SqlConnection(connStr);
@@ -100,7 +101,7 @@ namespace WebSite
             {
                 connection.Open();
 
-                string query = "SELECT * FROM Users WHERE Email LIKE '"
+                string query = "SELECT [ID] FROM Users WHERE Email LIKE '"
                     + aEmail
                     + "' AND Password LIKE '" 
                     + getHashCode(aPassword) 
@@ -111,7 +112,7 @@ namespace WebSite
                 // The user exists in the DB
                 if (dataReader.Read())
                 {
-                    result = true;
+                    userID = dataReader.GetInt32(0);
                 }
 
                 dataReader.Close();
@@ -134,7 +135,7 @@ namespace WebSite
                 }
             }
 
-            return result;
+            return userID;
         }
 
         //==============================================================
@@ -159,7 +160,14 @@ namespace WebSite
             else
             {
                 // Connect to DB and search for the user.
-                if (!ValidateUserInDB(Email.Text, Password.Text))
+                int userID = GetUserID(Email.Text, Password.Text);
+
+                if (userID > 0)
+                {
+                    Response.Redirect("ShowBugs.aspx?userid=" + userID);
+
+                }
+                else
                 {
                     ErrorText.Text = "User " + Email.Text + " does not exist.";
                     ErrorText.Visible = true;

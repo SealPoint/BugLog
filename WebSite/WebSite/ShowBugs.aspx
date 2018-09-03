@@ -5,12 +5,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title>Show Bugs</title>
+    <style>
+        .body
+        {
+            background-color: #7092BE;
+            font-family: Times New Roman;
+            font-size: 14pt;
+            color: #FFFF00;
+        }
+        
+        .headerPad
+        {
+            position: absolute;
+            width: 500px;
+            height: 100px;
+            z-index: 15;
+            top: 30%;
+            left: 48%;
+            margin: -100px 0 0 -150px;
+            font-family: Edwardian Script ITC;
+            font-size: 48pt;
+        }
+    </style>
 </head>
-<body>
+<body class="body">
     <form id="form1" runat="server">
-    <div>
-    
-    </div>
+        <div class="headerPad">
+            Your Bugs
+        </div>
     </form>
 </body>
 </html>

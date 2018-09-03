@@ -59,7 +59,7 @@
     </style>
 </head>
 <body class="body">
-    <form id="form1" runat="server">
+    <form id="Form1" runat="server">
         <div class="headerPad">
             Welcome to BugLog!
         </div>
