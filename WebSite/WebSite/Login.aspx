@@ -1,4 +1,78 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="WebSite._Default" %>
+<script runat="server">
+    
+public string getHashCode (string str)
+{
+    int hash1 = 5381;
+    int hash2 = hash1;
+
+    for (int i = 0; i < str.Length && str[i] != '\0'; i += 2)
+    {
+        hash1 = ((hash1 << 5) + hash1) ^ str[i];
+        if (i == str.Length - 1 || str[i + 1] == '\0')
+            break;
+        hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+    }
+
+    return (hash1 + (hash2 * 1566083941)).ToString();
+}
+
+public bool ValidateUserInDB(string email, string password)
+{
+    string connStr = "Data Source=Julia-Laptop\\JULIA;Initial Catalog=BugLog;User ID=Julia;Password=quBa&4up";
+
+    System.Data.SqlClient.SqlConnection cnn;
+    cnn = new System.Data.SqlClient.SqlConnection(connStr);
+    bool result = false;
+    
+    try
+    {
+        cnn.Open();
+
+        string query = "SELECT * FROM Users WHERE Email LIKE '"
+            + email + "' AND Password LIKE '" + getHashCode(password) + "'";
+        System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, cnn);
+        System.Data.SqlClient.SqlDataReader dataReader = command.ExecuteReader();
+        if (dataReader.Read())
+        {
+            result = true;
+        }
+        dataReader.Close();
+        command.Dispose();
+
+        cnn.Close();
+    }
+    catch (Exception ex)
+    {
+        Response.Write("Cannot open connection ! ");
+    }
+
+    return result;
+}
+    
+public void ValidateLogin (object sender, EventArgs e)
+{
+    if (Email.Text.Length == 0)
+    {
+        ErrorText.Text = "Please enter your e-mail.";
+        ErrorText.Visible = true;
+    }
+    else if (Password.Text.Length == 0)
+    {
+        ErrorText.Text = "Please enter the password.";
+        ErrorText.Visible = true;
+    }
+    else
+    {
+        // Connect to DB and search for the user.
+        if (!ValidateUserInDB(Email.Text, Password.Text))
+        {
+            ErrorText.Text = "User " + Email.Text + " does not exist.";
+            ErrorText.Visible = true;
+        }
+    }
+}
+</script>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -49,27 +123,17 @@
             font-family: Times New Roman;
             font-size: 14pt;
         }
-    </style>
-    <script language="javascript">
-        function validate() {
-            var errorText = document.getElementById("errorText");
-
-            if (document.forms["form1"].login.value == "") {
-                errorText.style.display = "block";
-                errorText.innerHTML = "Please enter your e-mail.";
-            }
-            else if (document.forms["form1"].password.value == "") {
-                errorText.style.display = "block";
-                errorText.innerHTML = "Please enter the password.";
-            }
-            else {
-                document.forms["form1"].submit();
-            }
+        
+        .errorText
+        {
+            font-family: Times New Roman;
+            font-size: 14pt;
+            color: #FF0000;
         }
-    </script>
+    </style>
 </head>
 <body class="body">
-    <form id="form1" runat="server" action="ShowBugs.aspx">
+    <form id="form1" runat="server">
         <div class="headerPad">
             Welcome to BugLog!
         </div>
@@ -80,7 +144,7 @@
                         e-mail:
                     </td>
                     <td>
-                        <input id="login" class="login" type="text" />
+                        <asp:TextBox id="Email" runat="server" CssClass="login" />
                     </td>
                 </tr>
                 <tr>
@@ -88,20 +152,20 @@
                         password:
                     </td>
                     <td>
-                        <input id="password" class="login" type="password" />
+                        <asp:TextBox TextMode="Password" id="Password" runat="server" CssClass="login" />
                     </td>
                 </tr>
                 <tr align="center">
                     <td></td>
                     <td>
-                        <input type="button" class="submit" value="Log In" onclick="validate()" />
+                        <asp:Button id="submit" runat="server" Text="Log In" CssClass="submit" OnClick="ValidateLogin" />
                     </td>
                 </tr>
             </table>
-            <table border="0" style="color: Red">
+            <table border="0">
                 <tr>
                     <td>
-                        <div id="errorText" style="display: hidden" />
+                        <asp:Label id="ErrorText" runat="server" CssClass="errorText" Visible="false"/>
                     </td>
                 </tr>
             </table>
