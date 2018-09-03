@@ -9,8 +9,10 @@ namespace WebSite
 {
     public partial class ShowBugs : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected void Page_Load (object sender, EventArgs e)
         {
+            string userIDStr = Request["userIDStr"];
+            
 
         }
     }

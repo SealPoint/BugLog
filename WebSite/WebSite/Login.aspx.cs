@@ -5,10 +5,6 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-using System.Configuration;
-using System.Web.Configuration;
-
-using System.Data.SqlClient;
 
 namespace WebSite
 {
@@ -17,125 +13,6 @@ namespace WebSite
         protected void Page_Load(object aSender, EventArgs aEventArgs)
         {
 
-        }
-
-        //==============================================================
-        /// <summary>
-        /// Gets the value of aConfigParamName from Web.config.
-        /// </summary>
-        /// <param name="aConfigParamName">The name of the parameter
-        /// in WebConfig.xml</param>
-        /// <returns>The value of the config parameter if it is
-        /// defined in WebConfig.xml, otherwise null </returns>
-        private string getConfigValue (string aConfigParamName)
-        {
-            Configuration webConfig
-                = WebConfigurationManager.OpenWebConfiguration("/");
-
-            if (webConfig.AppSettings.Settings.Count > 0)
-            {
-                KeyValueConfigurationElement customSetting
-                    = webConfig.AppSettings.Settings[aConfigParamName];
-
-                if (customSetting != null)
-                {
-                    return customSetting.Value;
-                }
-            }
-
-            return null;
-        }
-
-        //==============================================================
-        /// <summary>
-        /// A helper method that generates a permanent hash string.
-        /// </summary>
-        /// <param name="aString"></param>
-        /// <returns>The hash as a string</returns>
-        private string getHashCode (string aString)
-        {
-            int hash1 = 5381;
-            int hash2 = hash1;
-
-            for (int i = 0;
-                 i < aString.Length &&
-                 aString[i] != '\0';
-                 i += 2)
-            {
-                hash1 = ((hash1 << 5) + hash1) ^ aString[i];
-                if (i == aString.Length - 1 ||
-                    aString[i + 1] == '\0')
-                {
-                    break;
-                }
-
-                hash2 = ((hash2 << 5) + hash2) ^ aString[i + 1];
-            }
-
-            return (hash1 + (hash2 * 1566083941)).ToString();
-        }
-
-        //==============================================================
-        /// <summary>
-        /// Checks if a user with aEmail and aPassword exists in the DB.
-        /// </summary>
-        /// <param name="aEmail">The e-mail</param>
-        /// <param name="aPassword">The password</param>
-        /// <returns>The user ID if the user exists in the DB, -1 otherwise
-        /// </returns>
-        private int GetUserID(string aEmail, string aPassword)
-        {
-            string connStr = getConfigValue("ConnString");
-            int userID = -1;
-
-            if (connStr == null)
-            {
-                Response.Write("No connection string");
-                return userID;
-            }
-
-            SqlConnection connection = new SqlConnection(connStr);
-            bool result = false;
-
-            try
-            {
-                connection.Open();
-
-                string query = "SELECT [ID] FROM Users WHERE Email LIKE '"
-                    + aEmail
-                    + "' AND Password LIKE '" 
-                    + getHashCode(aPassword) 
-                    + "'";
-                SqlCommand command = new SqlCommand(query, connection);
-                SqlDataReader dataReader = command.ExecuteReader();
-
-                // The user exists in the DB
-                if (dataReader.Read())
-                {
-                    userID = dataReader.GetInt32(0);
-                }
-
-                dataReader.Close();
-                command.Dispose();
-
-
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Cannot open connection!");
-            }
-            finally
-            {
-                try
-                {
-                    connection.Close();
-                }
-                catch (Exception ex)
-                {
-                }
-            }
-
-            return userID;
         }
 
         //==============================================================
@@ -160,7 +37,10 @@ namespace WebSite
             else
             {
                 // Connect to DB and search for the user.
-                int userID = GetUserID(Email.Text, Password.Text);
+                string errorStr = "";
+                int userID = DBUtility.instance().GetUserID(Email.Text,
+                                                            Password.Text,
+                                                            ref errorStr);
 
                 if (userID > 0)
                 {
@@ -169,7 +49,15 @@ namespace WebSite
                 }
                 else
                 {
-                    ErrorText.Text = "User " + Email.Text + " does not exist.";
+                    if (errorStr.Length > 0)
+                    {
+                        ErrorText.Text = errorStr;
+                    }
+                    else
+                    {
+                        ErrorText.Text = "User " + Email.Text + " does not exist.";
+                    }
+
                     ErrorText.Visible = true;
                 }
             }
