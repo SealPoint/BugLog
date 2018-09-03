@@ -101,7 +101,10 @@ namespace WebSite
                 connection.Open();
 
                 string query = "SELECT * FROM Users WHERE Email LIKE '"
-                    + aEmail + "' AND Password LIKE '" + getHashCode(aPassword) + "'";
+                    + aEmail
+                    + "' AND Password LIKE '" 
+                    + getHashCode(aPassword) 
+                    + "'";
                 SqlCommand command = new SqlCommand(query, connection);
                 SqlDataReader dataReader = command.ExecuteReader();
 
