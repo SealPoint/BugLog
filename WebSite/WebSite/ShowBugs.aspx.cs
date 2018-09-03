@@ -11,9 +11,19 @@ namespace WebSite
     {
         protected void Page_Load (object sender, EventArgs e)
         {
-            string userIDStr = Request["userIDStr"];
-            
+            string userIDStr = Request["userid"];
+            string errorStr = "";
+            List<BugInfo> bugs = DBUtility.instance().GetRecentBugs(userIDStr,
+                                                                    ref errorStr);
 
+            if (errorStr.Length > 0)
+            {
+                NoBugs.Text = errorStr;
+            }
+            else if (bugs.Count == 0)
+            {
+                NoBugs.Text = "You didn't report any bugs yet.";
+            }
         }
     }
 }

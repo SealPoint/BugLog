@@ -43,7 +43,7 @@
             width: 256px;
         }
         
-        .submit
+        .button
         {
             width: 100px;
             font-family: Times New Roman;
@@ -84,7 +84,7 @@
                 <tr align="center">
                     <td></td>
                     <td>
-                        <asp:Button id="submit" runat="server" Text="Log In" CssClass="submit" OnClick="ValidateLogin" />
+                        <asp:Button id="submit" runat="server" Text="Log In" CssClass="button" OnClick="ValidateLogin" />
                     </td>
                 </tr>
             </table>

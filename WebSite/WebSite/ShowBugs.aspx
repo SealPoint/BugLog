@@ -26,12 +26,43 @@
             font-family: Edwardian Script ITC;
             font-size: 48pt;
         }
+        .centralPad
+        {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            z-index: 15;
+            top: 50%;
+            left: 50%;
+            margin: -100px 0 0 -150px;
+        }
+        
+        .button
+        {
+            width: 150px;
+            font-family: Times New Roman;
+            font-size: 14pt;
+        }
     </style>
 </head>
 <body class="body">
     <form id="form1" runat="server">
         <div class="headerPad">
             Your Bugs
+        </div>
+        <div class="centralPad">
+            <table border="0">
+                <tr>
+                    <td>
+                        <asp:Label id="NoBugs" runat="server" />
+                    </td>
+                </tr>
+                <tr align="center">
+                    <td>
+                        <asp:Button id="submit" runat="server" Text="Report a Bug" CssClass="button" />
+                    </td>
+                </tr>
+            </table>
         </div>
     </form>
 </body>

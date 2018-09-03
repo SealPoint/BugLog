@@ -14,6 +14,11 @@ namespace WebSite
     {
         private static DBUtility _instance = null;
 
+        //==============================================================
+        /// <summary>
+        /// Returns the only instance of this class
+        /// </summary>
+        /// <returns></returns>
         public static DBUtility instance ()
         {
             if (_instance == null)
@@ -32,7 +37,7 @@ namespace WebSite
         /// in WebConfig.xml</param>
         /// <returns>The value of the config parameter if it is
         /// defined in WebConfig.xml, otherwise null </returns>
-        private string getConfigValue(string aConfigParamName)
+        private string getConfigValue (string aConfigParamName)
         {
             Configuration webConfig
                 = WebConfigurationManager.OpenWebConfiguration("/");
@@ -103,7 +108,6 @@ namespace WebSite
             }
 
             SqlConnection connection = new SqlConnection(connStr);
-            bool result = false;
 
             try
             {
@@ -144,6 +148,75 @@ namespace WebSite
             }
 
             return userID;
+        }
+
+        //==============================================================
+        /// <summary>
+        /// Returns top recent bugs reported by the given user.
+        /// </summary>
+        /// <param name="aUserID">The ID of the user</param>
+        /// <param name="aErrorStr">The description of a DB error</param>
+        /// <returns>
+        /// </returns>
+        public List<BugInfo> GetRecentBugs (string aUserID,
+                                  ref string aErrorStr)
+        {
+            List<BugInfo> bugs = new List<BugInfo>();
+            string connStr = getConfigValue("ConnString");
+
+            if (connStr == null)
+            {
+                aErrorStr = "No connection string specified";
+                return bugs;
+            }
+
+            SqlConnection connection = new SqlConnection(connStr);
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT TOP 10 [ID], Title, Description, Status"
+                               + " FROM ReportedBy"
+                               + " INNER JOIN Bugs ON ReportedBy.BugID = Bugs.[ID]"
+                               + " WHERE ReportedBy.UserID = "
+                               + aUserID
+                               + " ORDER BY [ID] DESC";
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader dataReader = command.ExecuteReader();
+
+                // Fill the bug info
+                while (dataReader.Read())
+                {
+                    int bugID = dataReader.GetInt32(0);
+                    string bugTitle = dataReader.GetString(1);
+                    string bugDescription = dataReader.GetString(2);
+                    string bugStatus = dataReader.GetString(3);
+                    BugInfo bugInfo = new BugInfo(bugID, bugTitle, bugDescription, bugStatus);
+                    bugs.Add(bugInfo);
+                }
+
+                dataReader.Close();
+                command.Dispose();
+
+
+            }
+            catch (Exception ex)
+            {
+                aErrorStr = ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            return bugs;
         }
     }
 }
