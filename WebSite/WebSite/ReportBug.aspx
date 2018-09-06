@@ -8,10 +8,9 @@
     <style type="text/css">
         .body
         {
-            background-color: #7092BE;
-            font-family: Times New Roman;
-            font-size: 14pt;
-            color: #FFFF00;
+            background-color: #A0B6D4;
+            font-family: Calibri;
+            color: #444444;
         }
         
         .headerPad
@@ -32,7 +31,7 @@
             width: 700px;
             height: 200px;
             z-index: 15;
-            top: 45%;
+            top: 42%;
             left: 40%;
             margin: -100px 0 0 -150px;
         }
@@ -46,18 +45,12 @@
         }
         .gap
         {
-            height: 30px;
+            height: 10px;
         }
         .description
         {
             width: 500px;
             height: 300px;
-        }
-        .button
-        {
-            width: 150px;
-            font-family: Times New Roman;
-            font-size: 14pt;
         }
     </style>
 </head>
@@ -69,28 +62,31 @@
         <div class="centralPad">
             <table border="0">
                 <tr>
-                    <td align="right">
+                    <td>
                     Bug Title:&nbsp;
                     </td>
+                </tr>
+                <tr>
                     <td>
                         <asp:TextBox runat="server" id="BugTitle" CssClass="title" />
                     </td>
                 </tr>
                 <tr>
-                    <td></td>
                     <td class="subtitle">Please provide a brief description</td>
                 </tr>
                 <tr class="gap" />
                 <tr>
-                    <td valign="top">Steps to reproduce:&nbsp;</td>
+                    <td valign="top">Steps to reproduce the bug:&nbsp;</td>
+                </tr>
+                <tr>
                     <td>
                         <asp:TextBox TextMode="MultiLine" id="BugDescription" runat="server" CssClass="description" />
                     </td>
                 </tr>
                 <tr align="center">
-                    <td></td>
                     <td>
-                        <asp:Button ID="CreateBug" runat="server" Text="Report Bug" CssClass="button" OnClick="CreateNewBug" />
+                        <asp:Button ID="CreateBug" runat="server" Text="Report Bug" OnClick="CreateNewBug" />
+                        <asp:Button ID="Cancel" runat="server" Text="Cancel" OnClick="CancelBug" />
                     </td>
                 </tr>
             </table>

@@ -30,5 +30,10 @@ namespace WebSite
                 Response.Redirect("ShowBugs.aspx?userid=" + Request["userid"]);
             }
         }
+
+        protected void CancelBug(object aSender, EventArgs aEventArgs)
+        {
+            Response.Redirect("ShowBugs.aspx?userid=" + Request["userid"]);
+        }
     }
 }

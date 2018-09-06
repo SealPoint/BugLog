@@ -8,10 +8,7 @@
     <style type="text/css">
         .body
         {
-            background-color: #7092BE;
-            font-family: Times New Roman;
-            font-size: 14pt;
-            color: #FFFF00;
+            background-color: #A0B6D4;
         }
         
         .headerPad
@@ -36,6 +33,7 @@
             top: 50%;
             left: 50%;
             margin: -100px 0 0 -150px;
+            font-family: Calibri;
         }
         
         .login
@@ -46,14 +44,10 @@
         .button
         {
             width: 100px;
-            font-family: Times New Roman;
-            font-size: 14pt;
         }
         
         .errorText
         {
-            font-family: Times New Roman;
-            font-size: 14pt;
             color: #FF0000;
         }
     </style>

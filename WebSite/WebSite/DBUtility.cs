@@ -5,8 +5,10 @@ using System.Web;
 
 using System.Configuration;
 using System.Web.Configuration;
+using System.Web.Hosting;
 
 using System.Data.SqlClient;
+
 
 namespace WebSite
 {
@@ -39,8 +41,11 @@ namespace WebSite
         /// defined in WebConfig.xml, otherwise null </returns>
         private string GetConfigValue(string aConfigParamName)
         {
+            string physDir = HostingEnvironment.ApplicationPhysicalPath;
+            string virtPath = HostingEnvironment.ApplicationVirtualPath;
+
             Configuration webConfig
-                = WebConfigurationManager.OpenWebConfiguration("/");
+                = WebConfigurationManager.OpenWebConfiguration("~/web.config");
 
             if (webConfig.AppSettings.Settings.Count > 0)
             {

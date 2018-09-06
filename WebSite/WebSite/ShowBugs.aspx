@@ -8,10 +8,7 @@
     <style type="text/css">
         .body
         {
-            background-color: #7092BE;
-            font-family: Times New Roman;
-            font-size: 14pt;
-            color: #FFFF00;
+            background-color: #A0B6D4;
         }
         
         .headerPad
@@ -29,40 +26,129 @@
         .centralPad
         {
             position: absolute;
-            width: 300px;
+            width: 80%;
             height: 200px;
             z-index: 15;
-            top: 50%;
-            left: 50%;
+            top: 42%;
+            left: 20%;
             margin: -100px 0 0 -150px;
         }
-        
+        table.blueTable
+        {
+            border: 1px solid #1C6EA4;
+            background-color: #EEEEEE;
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+        }
+        table.blueTable td, table.blueTable th
+        {
+            border: 1px solid #AAAAAA;
+            padding: 3px 2px;
+            font-family: Calibri;
+        }
+        table.blueTable tbody td
+        {
+            font-size: 15px;
+        }
+        table.blueTable tr:nth-child(even)
+        {
+            background: #D0E4F5;
+        }
+        table.blueTable thead
+        {
+            background: #1C6EA4;
+            background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+            background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+            background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+            border-bottom: 2px solid #444444;
+        }
+        table.blueTable thead th
+        {
+            font-size: 15px;
+            font-weight: bold;
+            color: #FFFFFF;
+            border-left: 2px solid #D0E4F5;
+        }
+        table.blueTable thead th:first-child
+        {
+            border-left: none;
+        }
+
+        table.blueTable tfoot
+        {
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFFFFF;
+            background: #D0E4F5;
+            background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+            background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+            background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+            border-top: 2px solid #444444;
+        }
+        table.blueTable tfoot td
+        {
+            font-size: 14px;
+        }
+        table.blueTable tfoot .links
+        {
+            text-align: right;
+        }
+        table.blueTable tfoot .links a
+        {
+            display: block;
+            background: #1C6EA4;
+            color: #FFFFFF;
+            padding: 2px 8px;
+            border: 5px;
+        }
         .button
         {
             width: 150px;
-            font-family: Times New Roman;
-            font-size: 14pt;
         }
     </style>
 </head>
 <body class="body">
-    <form id="form1" runat="server">
+    <form id="form1" runat="server" action="ReportBug.aspx">
         <div class="headerPad">
             Your Bugs
         </div>
         <div class="centralPad">
+            <table id="BugTable" class="blueTable">
+                <thead>
+                    <tr>
+                        <th>Bug ID</th>
+                        <th>Title/Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <%
+                    string errorStr = "";
+                    System.Collections.Generic.List<WebSite.BugInfo> bugs
+                        = WebSite.DBUtility.Instance().GetRecentBugs(Request["userid"],
+                                                                     ref errorStr);
+
+                    for (int i = 0; i < bugs.Count; ++i)
+                    {
+                        Response.Write("<tr>"
+                                       + "<td>Bug" + bugs[i].ID + "</td>"
+                                       + "<td>" + bugs[i].Title + "</td>"
+                                       + "<td width=\"50px\"><input type=\"button\" value=\"View\\Edit\" /></td>"
+                                       + "</tr>");
+                    } 
+                %>
+            </table>
             <table border="0">
                 <tr>
-                    <td>
-                        <asp:Label id="NoBugs" runat="server" />
-                    </td>
-                </tr>
-                <tr align="center">
-                    <td>
-                        <asp:Button id="submit" runat="server" Text="Report a Bug" CssClass="button" onClick="ReportBug" />
+                    <td align="center">
+                        <input type="submit" value="Report Bug" />
                     </td>
                 </tr>
             </table>
+            <%
+                Response.Write("<input type=\"hidden\" id=\"userid\" value=\""
+                                + Request["userid"] + "\" />");
+            %>
         </div>
     </form>
 </body>
