@@ -45,7 +45,7 @@ namespace WebSite
                 if (userID > 0)
                 {
                     Session["userID"] = userID.ToString();
-                    Response.Redirect("ShowBugs.aspx?userid=" + userID);
+                    Response.Redirect("ShowBugs.aspx");
 
                 }
                 else

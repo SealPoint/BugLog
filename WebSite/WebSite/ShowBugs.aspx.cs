@@ -14,9 +14,9 @@ namespace WebSite
         {
         }
 
-        protected void ReportBug (object aSender, EventArgs aEventArgs)
+        protected void ReportNewBug (object aSender, EventArgs aEventArgs)
         {
-            Response.Redirect("ReportBug.aspx?userid=" + Request["userid"]);
+            Response.Redirect("ReportBug.aspx");
         }
     }
 }

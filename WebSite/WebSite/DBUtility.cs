@@ -39,7 +39,7 @@ namespace WebSite
         /// in WebConfig.xml</param>
         /// <returns>The value of the config parameter if it is
         /// defined in WebConfig.xml, otherwise null </returns>
-        private string GetConfigValue(string aConfigParamName)
+        private string GetConfigValue (string aConfigParamName)
         {
             string physDir = HostingEnvironment.ApplicationPhysicalPath;
             string virtPath = HostingEnvironment.ApplicationVirtualPath;
@@ -67,7 +67,7 @@ namespace WebSite
         /// </summary>
         /// <param name="aString"></param>
         /// <returns>The hash as a string</returns>
-        private string GetHashCode(string aString)
+        private string GetHashCode (string aString)
         {
             int hash1 = 5381;
             int hash2 = hash1;
@@ -99,7 +99,7 @@ namespace WebSite
         /// <param name="aErrorStr">The description of a DB error</param>
         /// <returns>The user ID if the user exists in the DB, -1 otherwise
         /// </returns>
-        public int GetUserID(string aEmail,
+        public int GetUserID (string aEmail,
                               string aPassword,
                               ref string aErrorStr)
         {
@@ -164,8 +164,8 @@ namespace WebSite
         /// <param name="aErrorStr">The description of a DB error</param>
         /// <returns>
         /// </returns>
-        public List<BugInfo> GetRecentBugs(string aUserID,
-                                  ref string aErrorStr)
+        public List<BugInfo> GetRecentBugs (string aUserID,
+                                            ref string aErrorStr)
         {
             List<BugInfo> bugs = new List<BugInfo>();
             string connStr = GetConfigValue("ConnString");

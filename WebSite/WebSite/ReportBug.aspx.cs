@@ -17,7 +17,7 @@ namespace WebSite
         protected void CreateNewBug (object aSender, EventArgs aEventArgs)
         {
             string errorStr = "";
-            DBUtility.Instance().ReportBug(Request["userid"],
+            DBUtility.Instance().ReportBug(Session["userID"].ToString(),
                                            BugTitle.Text,
                                            BugDescription.Text,
                                            ref errorStr);

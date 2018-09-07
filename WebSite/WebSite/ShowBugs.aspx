@@ -106,10 +106,14 @@
         {
             width: 150px;
         }
+        .reportedStatus
+        {
+            background-color: #FF5050;
+        }
     </style>
 </head>
 <body class="body">
-    <form id="form1" runat="server" action="ReportBug.aspx">
+    <form id="form1" runat="server">
         <div class="headerPad">
             Your Bugs
         </div>
@@ -119,21 +123,23 @@
                     <tr>
                         <th>Bug ID</th>
                         <th>Title/Description</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
                 <%
                     string errorStr = "";
                     System.Collections.Generic.List<WebSite.BugInfo> bugs
-                        = WebSite.DBUtility.Instance().GetRecentBugs(Request["userid"],
+                        = WebSite.DBUtility.Instance().GetRecentBugs(Session["userID"].ToString(),
                                                                      ref errorStr);
 
                     for (int i = 0; i < bugs.Count; ++i)
                     {
                         Response.Write("<tr>"
-                                       + "<td>Bug" + bugs[i].ID + "</td>"
+                                       + "<td width=\"50\">Bug" + bugs[i].ID + "</td>"
                                        + "<td>" + bugs[i].Title + "</td>"
-                                       + "<td width=\"50px\"><input type=\"button\" value=\"View\\Edit\" /></td>"
+                                       + "<td class=\"reportedStatus\" width=\"70\">" + bugs[i].Status + "</td>"
+                                       + "<td width=\"50\"><input type=\"button\" value=\"View\\Edit\" /></td>"
                                        + "</tr>");
                     } 
                 %>
@@ -141,14 +147,10 @@
             <table border="0">
                 <tr>
                     <td align="center">
-                        <input type="submit" value="Report Bug" />
+                        <asp:Button ID="ReportBug" runat="server" Text="Report Bug" OnClick="ReportNewBug" />
                     </td>
                 </tr>
             </table>
-            <%
-                Response.Write("<input type=\"hidden\" id=\"userid\" value=\""
-                                + Request["userid"] + "\" />");
-            %>
         </div>
     </form>
 </body>
