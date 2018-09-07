@@ -44,7 +44,7 @@ namespace WebSite
 
                 if (userID > 0)
                 {
-                    Session["userID"] = userID.ToString();
+                    Session["UserID"] = userID.ToString();
                     Response.Redirect("ShowBugs.aspx");
 
                 }

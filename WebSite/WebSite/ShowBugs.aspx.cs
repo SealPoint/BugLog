@@ -16,7 +16,7 @@ namespace WebSite
 
         protected void ReportNewBug (object aSender, EventArgs aEventArgs)
         {
-            Response.Redirect("ReportBug.aspx");
+            Response.Redirect("SaveBug.aspx");
         }
     }
 }

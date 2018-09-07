@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReportBug.aspx.cs" Inherits="WebSite.ReportBug" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SaveBug.aspx.cs" Inherits="WebSite.SaveBug" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -41,6 +41,7 @@
         }
         .subtitle
         {
+            font-family: Calibri;
             font-size: 12pt;
         }
         .gap
@@ -49,6 +50,8 @@
         }
         .description
         {
+            font-family: Calibri;
+            font-size: 12pt;
             width: 500px;
             height: 300px;
         }
@@ -85,7 +88,7 @@
                 </tr>
                 <tr align="center">
                     <td>
-                        <asp:Button ID="CreateBug" runat="server" Text="Report Bug" OnClick="CreateNewBug" />
+                        <asp:Button ID="CreateBug" runat="server" Text="Save" OnClick="SaveBugInfo" />
                         <asp:Button ID="Cancel" runat="server" Text="Cancel" OnClick="CancelBug" />
                     </td>
                 </tr>

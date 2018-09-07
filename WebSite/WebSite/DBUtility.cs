@@ -228,6 +228,75 @@ namespace WebSite
 
         //==============================================================
         /// <summary>
+        /// Returns the bug data, given a bug ID.
+        /// </summary>
+        /// <param name="aBugId">The ID of the bug</param>
+        /// <param name="aErrorStr">The description of a DB error</param>
+        /// <returns>
+        /// The bug title, dscription, etc. if the bug is in the DB,
+        /// null otherwise.
+        /// </returns>
+        public BugInfo GetBugInfo (string aBugID,
+                                   ref string aErrorStr)
+        {
+            BugInfo bug = null;
+            string connStr = GetConfigValue("ConnString");
+
+            if (connStr == null)
+            {
+                aErrorStr = "No connection string specified";
+                return bug;
+            }
+
+            SqlConnection connection = new SqlConnection(connStr);
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT [ID], Title, Description, Status"
+                               + " FROM Bugs"
+                               + " WHERE [ID] = " + aBugID;
+                               
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader dataReader = command.ExecuteReader();
+
+                // Fill the bug info
+                if (dataReader.Read())
+                {
+                    int bugID = dataReader.GetInt32(0);
+                    string bugTitle = dataReader.GetString(1);
+                    string bugDescription = dataReader.GetString(2);
+                    string bugStatus = dataReader.GetString(3);
+                    bug = new BugInfo(bugID, bugTitle, bugDescription, bugStatus);
+                }
+
+                dataReader.Close();
+                command.Dispose();
+
+
+            }
+            catch (Exception ex)
+            {
+                aErrorStr = ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    aErrorStr += ex.Message;
+                }
+            }
+
+            return bug;
+        }
+
+        //==============================================================
+        /// <summary>
         /// Adds a new bug to the DB.
         /// </summary>
         /// <param name="aUserID">The ID of the user who reported the bug</param>

@@ -11,16 +11,35 @@ namespace WebSite
     {
         protected void Page_Load (object aSender, EventArgs aEventArgs)
         {
+            if (Request["BugId"] != null)
+            {
+                string errorMsg = "";
+                BugInfo bug = DBUtility.Instance().GetBugInfo(Request["BugID"], ref errorMsg);
 
+                if (errorMsg.Length > 0)
+                {
+                    Response.Write(errorMsg);
+                }
+
+                if (bug != null)
+                {
+                    BugTitle.Text = bug.Title;
+                    BugDescription.Text = bug.Description;
+                }
+            }
         }
 
-        protected void CreateNewBug (object aSender, EventArgs aEventArgs)
+        protected void SaveBugInfo (object aSender, EventArgs aEventArgs)
         {
             string errorStr = "";
-            DBUtility.Instance().ReportBug(Session["userID"].ToString(),
-                                           BugTitle.Text,
-                                           BugDescription.Text,
-                                           ref errorStr);
+
+            if (Request["BugId"] == null)
+            {
+                DBUtility.Instance().ReportBug(Session["UserID"].ToString(),
+                                               BugTitle.Text,
+                                               BugDescription.Text,
+                                               ref errorStr);
+            }
             if (errorStr.Length > 0)
             {
                 Response.Write(errorStr);

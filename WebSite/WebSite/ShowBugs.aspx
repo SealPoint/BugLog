@@ -137,7 +137,7 @@
                 <%
                     string errorStr = "";
                     System.Collections.Generic.List<WebSite.BugInfo> bugs
-                        = WebSite.DBUtility.Instance().GetRecentBugs(Session["userID"].ToString(),
+                        = WebSite.DBUtility.Instance().GetRecentBugs(Session["UserID"].ToString(),
                                                                      ref errorStr);
 
                     for (int i = 0; i < bugs.Count; ++i)
@@ -146,7 +146,7 @@
                                        + "<td width=\"50\">Bug" + bugs[i].ID + "</td>"
                                        + "<td>" + bugs[i].Title + "</td>"
                                        + "<td class=\"reportedStatus\" width=\"70\">" + bugs[i].Status + "</td>"
-                                       + "<td padding=\"2px\" width=\"50\"><a href=\"ReportBug.aspx?BugID="
+                                       + "<td padding=\"2px\" width=\"50\"><a href=\"SaveBug.aspx?BugID="
                                        + bugs[i].ID + "\">View/Edit</a></td>"
                                        + "</tr>");
                     } 
