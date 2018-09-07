@@ -11,7 +11,7 @@
 namespace WebSite {
     
     
-    public partial class ReportBug {
+    public partial class SaveBug {
         
         /// <summary>
         /// form1 control.

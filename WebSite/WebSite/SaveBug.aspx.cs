@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace WebSite
 {
-    public partial class ReportBug : System.Web.UI.Page
+    public partial class SaveBug : System.Web.UI.Page
     {
         protected void Page_Load (object aSender, EventArgs aEventArgs)
         {
