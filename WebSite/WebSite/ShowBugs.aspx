@@ -106,6 +106,13 @@
         {
             width: 150px;
         }
+        a{
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+
+}
         .reportedStatus
         {
             background-color: #FF5050;
@@ -139,7 +146,8 @@
                                        + "<td width=\"50\">Bug" + bugs[i].ID + "</td>"
                                        + "<td>" + bugs[i].Title + "</td>"
                                        + "<td class=\"reportedStatus\" width=\"70\">" + bugs[i].Status + "</td>"
-                                       + "<td width=\"50\"><input type=\"button\" value=\"View\\Edit\" /></td>"
+                                       + "<td padding=\"2px\" width=\"50\"><a href=\"ReportBug.aspx?BugID="
+                                       + bugs[i].ID + "\">View/Edit</a></td>"
                                        + "</tr>");
                     } 
                 %>
