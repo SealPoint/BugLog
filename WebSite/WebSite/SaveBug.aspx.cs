@@ -28,6 +28,8 @@ namespace WebSite
                     BugDescription.Text = bug.Description;
                 }
             }
+
+            BugTitle.Focus();
         }
 
         protected void SaveBugInfo (object aSender, EventArgs aEventArgs)

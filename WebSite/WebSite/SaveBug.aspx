@@ -64,11 +64,10 @@
             display: inline-block;
         }
         
-        .customSelect.active,
-        .customSelect:focus
+        .customSelect.mouseover
         {
             outline: none;
-            /*border: solid 1px #808080;*/
+            border: solid 1px #3399FF;
  
             /* This box-shadow property is not exactly required, however it's so important to be sure
             the active state is visible that we use it as a default value, feel free to override it. */
@@ -218,18 +217,11 @@
         // It takes one parameter
         // select : the DOM node with the `select` class to deactivate
         function deactivateSelect(select) {
-            // If the widget is not active there is nothing to do
-            if (!select.classList.contains('active'))
-            {
-                return;
-            }
-
-            // We need to get the list of options for the custom widget
             var optList = select.querySelector('.optList');
 
-            // We close the list of option
-            optList.classList.add('hidden');
-
+            if (!optList.classList.contains("hidden")) {
+                optList.classList.add("hidden");
+            }
             // and we deactivate the custom widget itself
             select.classList.remove('active');
         }
@@ -308,6 +300,7 @@
         };
 
         window.addEventListener('load', function() {
+
             var selectList = document.querySelectorAll('.customSelect');
 
             // Each custom widget needs to be initialized
@@ -315,7 +308,7 @@
                 // as well as all its `option` elements
                 var optionList = select.querySelectorAll('.option');
                 toggleOptList(select);
-                highlightOption(select, optionList[0]);
+                //highlightOption(select, optionList[0]);
 
 
                 // Each time a user hovers their mouse over an option, we highlight the given option
@@ -326,6 +319,16 @@
                         highlightOption(select, option);
                         updateValue(select, option);
                     });
+                });
+
+                // Each times the user click on a custom select element
+                select.addEventListener('mouseenter', function(event) {
+                    select.classList.add("mouseover");
+                });
+
+                // Each times the user click on a custom select element
+                select.addEventListener('mouseleave', function(event) {
+                    select.classList.remove("mouseover");
                 });
 
                 // Each times the user click on a custom select element
@@ -348,24 +351,17 @@
                     activeSelect(select, selectList);
                 });
 
-                select.addEventListener('mouseover', function() {
-                    activeSelect(selectList[0], selectList);
+                // In case the widget loses focus
+                select.addEventListener('blur', function(event) {
+                    // Note: the `select` variable is a closure
+                    // available in the scope of our function call.
+
+                    // We deactivate the widget
+                    deactivateSelect(select);
                 });
-
-                deactivateSelect(select);
-
-                // We activate the widget
-                activeSelect(select, selectList);
             });
 
-            // In case the widget loses focus
-            select.addEventListener('blur', function(event) {
-                // Note: the `select` variable is a closure
-                // available in the scope of our function call.
-
-                // We deactivate the widget
-                deactivateSelect(select);
-            });
+            
         });
         
     </script>
@@ -384,7 +380,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <asp:TextBox runat="server" id="BugTitle" CssClass="title" />
+                        <asp:TextBox runat="server" id="BugTitle" CssClass="title"/>
                     </td>
                 </tr>
                 <tr>
