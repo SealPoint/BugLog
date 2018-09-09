@@ -188,17 +188,29 @@
             overflow-y: auto;
             overflow-x: hidden;
 
-            border: .2em solid #000; /* 2px */
+            border: 1px solid #000; /* 2px */
             border-top-width : .1em; /* 1px */
-            border-radius: 0 0 .4em .4em; /* 0 0 4px 4px */
 
             box-shadow: 0 .2em .4em rgba(0,0,0,.4); /* 0 2px 4px */
             background: #f0f0f0;
         }
         
-        .customSelect .option
+        .customSelect .redOption
         {
-            padding: .2em .3em; /* 2px 3px */
+            padding: 2px 3px;
+            background: #FF5050;
+        }
+        
+        .customSelect .yellowOption
+        {
+            padding: 2px 3px;
+            background: #FFFF66;
+        }
+        
+        .customSelect .greenOption
+        {
+            padding: 2px 3px;
+            background: #66FF66;
         }
 
         .customSelect .highlight
@@ -208,6 +220,7 @@
         }
     </style>
     <script type="text/javascript" language="javascript">
+        var selectedIndex = 0;
         NodeList.prototype.forEach = function(callback)
         {
             Array.prototype.forEach.call(this, callback);
@@ -286,17 +299,22 @@
 
             // We update the value placeholder accordingly
             value.innerHTML = option.innerHTML;
+            value.style.backgroundColor = window.getComputedStyle(option, null).getPropertyValue('background-color')
         };
+        
+        function addOptionSelectionListener(select, colorOptionClass)
+        {
+            var optionList = select.querySelectorAll(colorOptionClass);
 
-        // This function returns the current selected index in the native widget
-        // It takes one parameter:
-        // select : the DOM node with the class `select` related to the native widget
-        function getIndex(select) {
-            // We need to access the native widget for the given custom widget
-            // In our example, that native widget is a sibling of the custom widget
-            var nativeWidget = select.previousElementSibling;
-
-            return nativeWidget.selectedIndex;
+            // Each time a user hovers their mouse over an option, we highlight the given option
+            optionList.forEach(function(option) {
+                option.addEventListener('mousedown', function() {
+                    // Note: the `select` and `option` variable are closures
+                    // available in the scope of our function call.
+                    updateValue(select, option);
+                });
+            });
+                
         };
 
         window.addEventListener('load', function() {
@@ -305,21 +323,9 @@
 
             // Each custom widget needs to be initialized
             selectList.forEach(function(select) {
-                // as well as all its `option` elements
-                var optionList = select.querySelectorAll('.option');
-                toggleOptList(select);
-                //highlightOption(select, optionList[0]);
-
-
-                // Each time a user hovers their mouse over an option, we highlight the given option
-                optionList.forEach(function(option) {
-                    option.addEventListener('mousedown', function() {
-                        // Note: the `select` and `option` variable are closures
-                        // available in the scope of our function call.
-                        highlightOption(select, option);
-                        updateValue(select, option);
-                    });
-                });
+                addOptionSelectionListener(select, ".redOption");
+                addOptionSelectionListener(select, ".yellowOption");
+                addOptionSelectionListener(select, ".greenOption");
 
                 // Each times the user click on a custom select element
                 select.addEventListener('mouseenter', function(event) {
@@ -359,9 +365,11 @@
                     // We deactivate the widget
                     deactivateSelect(select);
                 });
+
+                toggleOptList(select);
             });
 
-            
+
         });
         
     </script>
@@ -396,25 +404,19 @@
                         <asp:Panel runat="server" CssClass="customSelect">
   
                             <!-- This container will be used to display the current value of the widget -->
-                            <asp:Label runat="server" ID="BugStatus" CssClass="value">Cherry</asp:Label>
+                            <asp:Label runat="server" ID="BugStatus" CssClass="value"></asp:Label>
   
                             <!-- This container will contain all the options available for our widget.
                                  Because it's a list, it makes sense to use the ul element. -->
-                            <ul class="optList">
+                            <ul id="StatusOptions" runat="server" class="optList">
                                 <!-- Each option only contains the value to be displayed, we'll see later
                                      how to handle the real value that will be sent with the form data -->
-                                <li class="option">Cherry</li>
-                                <li class="option">Lemon</li>
-                                <li class="option">Banana</li>
-                                <li class="option">Strawberry</li>
-                                <li class="option">Apple</li>
+                                <li runat="server" class="redOption">Reported</li>
+                                <li runat="server" class="yellowOption">In Progress</li>
+                                <li runat="server" class="greenOption">Fixed</li>
                             </ul>
 
                         </asp:Panel>
-                        <select>
-                            <option selected="selected">Reported</option>
-                            <option>In progress</option>
-                        </select>
                     </td>
                 </tr>
                 <tr class="gap" />

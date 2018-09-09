@@ -302,10 +302,12 @@ namespace WebSite
         /// <param name="aUserID">The ID of the user who reported the bug</param>
         /// <param name="aTitle">The brief description of the bug</param>
         /// <param name="aDescription">The steps to reproduce.</param>
+        /// <param name="aBugStatus">Reported, In Progress or Fixed</param>
         /// <param name="aErrorStr">The description of a DB error</param>
         public void ReportBug(string aUserID,
                                string aTitle,
                                string aDescription,
+                                string aBugStatus,
                                ref string aErrorStr)
         {
             string connStr = GetConfigValue("ConnString");
@@ -322,11 +324,12 @@ namespace WebSite
             {
                 connection.Open();
 
-                string query = "INSERT INTO Bugs(Title, Description)"
+                string query = "INSERT INTO Bugs(Title, Description, Status)"
                     + " VALUES('" + aTitle.Replace("'", "''")
                     + "', '"
                     + aDescription.Replace("'", "''")
-                    + "');"
+                    + "', '"
+                    + aBugStatus +"');"
                     + " INSERT INTO ReportedBy(UserID, BugID)"
                     + " SELECT "
                     + aUserID
