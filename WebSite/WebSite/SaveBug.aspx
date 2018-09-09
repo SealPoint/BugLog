@@ -68,10 +68,11 @@
         .select:focus
         {
             outline: none;
+            border: solid 2px #953735;
  
             /* This box-shadow property is not exactly required, however it's so important to be sure
             the active state is visible that we use it as a default value, feel free to override it. */
-            box-shadow: 0 0 3px 1px #227755;
+            /*box-shadow: 0 0 3px 1px #227755;*/
         }
         
         /* The .select selector here is syntactic sugar to be sure the classes we define are
@@ -111,15 +112,7 @@
             width: 10em; /* 100px */
 
             border: .2em solid #000; /* 2px */
-            border-radius: .4em; /* 4px */
-            box-shadow: 0 .1em .2em rgba(0,0,0,.45); /* 0 1px 2px */
-  
-            /* The first declaration is for browsers that do not support linear gradients.
-               The second declaration is because WebKit based browsers haven't unprefixed it yet.
-               If you want to support legacy browsers, try http://www.colorzilla.com/gradient-editor/ */
-            background: #F0F0F0;
-            background: -webkit-linear-gradient(90deg, #E3E3E3, #fcfcfc 50%, #f0f0f0);
-            background: linear-gradient(0deg, #E3E3E3, #fcfcfc 50%, #f0f0f0);
+            /*box-shadow: 0 .1em .2em rgba(0,0,0,.45); 0 1px 2px */
         }
         
         .select .value
@@ -139,24 +132,30 @@
         
         .select:after
         {
-            content: "▼"; /* We use the unicode caracter U+25BC; see http://www.utf8-chartable.de */
+            content: ">"; /* We use the unicode caracter U+25BC; see http://www.utf8-chartable.de */
+            font: bold 17px "Consolas", monospace;
+            transform: rotate(90deg);
             position: absolute;
             z-index: 1; /* This will be important to keep the arrow from overlapping the list of options */
-            top: 0;
-            right: 0;
+            top: -2px;
+            right: 2px;
+            
 
             -moz-box-sizing: border-box;
-            box-sizing: border-box;
+            box-sizing: content-box;
 
-            height: 100%;
-            width: 2em;  /* 20px */
-            padding-top: .1em; /* 1px */
+            height: 20px;
+            width: 16px;  /* 20px */
+            vertical-align: middle;
 
-            border-left: .2em solid #000; /* 2px */
-            border-radius: 0 .1em .1em 0;  /* 0 1px 1px 0 */
+            /*border-left: .2em solid #000; 2px */
 
-            background-color: #000;
-            color: #FFF;
+            /* The first declaration is for browsers that do not support linear gradients.
+               The second declaration is because WebKit based browsers haven't unprefixed it yet.
+               If you want to support legacy browsers, try http://www.colorzilla.com/gradient-editor/ */
+            background: #D0D0D0;
+            /*background: -webkit-linear-gradient(90deg, #E3E3E3, #fcfcfc);
+            background: linear-gradient(270deg, #C0C0C0, #fcfcfc);*/
             text-align: center;
         }
         
@@ -244,7 +243,7 @@
             // Because the deactivateSelect function fulfill all the requirement of the
             // forEach callback function, we use it directly without using an intermediate
             // anonymous function.
-            selectList.forEach(deactivateSelect);
+            //selectList.forEach(deactivateSelect);
 
             // And we turn on the active state for this specific widget
             select.classList.add('active');
@@ -304,6 +303,10 @@
 
         window.addEventListener('load', function() {
             var selectList = document.querySelectorAll('.select');
+
+            selectList[0].addEventListener('mouseover', function() {
+                activeSelect(selectList[0], selectList);
+            });
 
             // Each custom widget needs to be initialized
             selectList.forEach(function(select) {
@@ -386,10 +389,10 @@
                         <!-- This is our main container for our widget.
                              The tabindex attribute is what allows the user to focus the widget. 
                              We'll see later that it's better to set it through JavaScript. -->
-                        <div class="select" tabindex="0">
+                        <asp:Panel runat="server" CssClass="select">
   
                             <!-- This container will be used to display the current value of the widget -->
-                            <span class="value">Cherry</span>
+                            <asp:Label runat="server" ID="BugStatus" CssClass="value">Cherry</asp:Label>
   
                             <!-- This container will contain all the options available for our widget.
                                  Because it's a list, it makes sense to use the ul element. -->
@@ -403,7 +406,10 @@
                                 <li class="option">Apple</li>
                             </ul>
 
-                        </div>
+                        </asp:Panel>
+                        <select>
+                            <option selected="selected">Reported</option>
+                        </select>
                     </td>
                 </tr>
                 <tr class="gap" />
