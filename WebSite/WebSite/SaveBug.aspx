@@ -68,7 +68,7 @@
         .customSelect:focus
         {
             outline: none;
-            border: solid 1px #808080;
+            /*border: solid 1px #808080;*/
  
             /* This box-shadow property is not exactly required, however it's so important to be sure
             the active state is visible that we use it as a default value, feel free to override it. */
@@ -96,23 +96,28 @@
         
         .customSelect
         {
+            display: inline-block;
             -moz-box-sizing: border-box;
             box-sizing: content-box;
 
             /* We need extra room for the down arrow we will add */
             padding: 0 0 0 0;
-            width: 100px;
-
-            border: .2em solid #000;
-            /*box-shadow: 0 .1em .2em rgba(0,0,0,.45); 0 1px 2px */
+            width: 120px;
+            height: 20px;
+            border: solid 1px #707070;
         }
         
         .value
         {
             /* Because the value can be wider than our widget, we have to make sure it will not
                change the widget's width */
+            z-index: 1;
+            position: absolute;
             display: block;
-            height: 17px;
+            top: 0;
+            left: -0.5px;
+            height: 18px;
+            width: 98px;
             overflow: hidden;
             padding: 0 0 0 0;
             font-family: Calibri;
@@ -126,7 +131,9 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             background: #FFFFFF;
-            border: none;
+            border-top: solid 1px #C0C0C0;
+            border-left: solid 1px #C0C0C0;
+            border-bottom: solid 1px #C0C0C0;
         }
         
         .customSelect:after
@@ -136,16 +143,16 @@
             transform: rotate(90deg);
             position: absolute;
             z-index: 1; /* This will be important to keep the arrow from overlapping the list of options */
-            top: -1.5px;
-            right: 1px;
+            top: -0.5px;
+            right: 0;
             line-height: 18px;
-            padding-left: 2px;
+            padding-left: 3px;
 
             -moz-box-sizing: border-box;
             box-sizing: content-box;
 
             height: 20px;
-            width: 15px;  /* 20px */
+            width: 16px;  /* 20px */
             text-align: middle;
 
             /*border-left: .2em solid #000; 2px */
