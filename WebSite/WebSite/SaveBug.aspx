@@ -299,7 +299,9 @@
 
             // We update the value placeholder accordingly
             value.innerHTML = option.innerHTML;
-            value.style.backgroundColor = window.getComputedStyle(option, null).getPropertyValue('background-color')
+            value.style.backgroundColor = window.getComputedStyle(option, null).getPropertyValue('background-color');
+            var storeValue = document.getElementById("BugStatusValue");
+            storeValue.value = option.innerHTML;
         };
         
         function addOptionSelectionListener(select, colorOptionClass)
@@ -432,6 +434,7 @@
                     <td>
                         <asp:Button ID="CreateBug" runat="server" Text="Save" OnClick="SaveBugInfo" />
                         <asp:Button ID="Cancel" runat="server" Text="Cancel" OnClick="CancelBug" />
+                        <asp:HiddenField ID="BugStatusValue" runat="server" />
                     </td>
                 </tr>
             </table>

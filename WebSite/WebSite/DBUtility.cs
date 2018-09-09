@@ -183,9 +183,8 @@ namespace WebSite
                 connection.Open();
 
                 string query = "SELECT TOP 10 [ID], Title, Description, Status"
-                               + " FROM ReportedBy"
-                               + " INNER JOIN Bugs ON ReportedBy.BugID = Bugs.[ID]"
-                               + " WHERE ReportedBy.UserID = "
+                               + " FROM Bugs"
+                               + " WHERE UserID = "
                                + aUserID
                                + " ORDER BY [ID] DESC";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -305,10 +304,10 @@ namespace WebSite
         /// <param name="aBugStatus">Reported, In Progress or Fixed</param>
         /// <param name="aErrorStr">The description of a DB error</param>
         public void ReportBug(string aUserID,
-                               string aTitle,
-                               string aDescription,
-                                string aBugStatus,
-                               ref string aErrorStr)
+                              string aTitle,
+                              string aDescription,
+                              string aBugStatus,
+                              ref string aErrorStr)
         {
             string connStr = GetConfigValue("ConnString");
 
@@ -324,16 +323,112 @@ namespace WebSite
             {
                 connection.Open();
 
-                string query = "INSERT INTO Bugs(Title, Description, Status)"
+                string query = "INSERT INTO Bugs(Title, Description, Status, UserID)"
                     + " VALUES('" + aTitle.Replace("'", "''")
                     + "', '"
                     + aDescription.Replace("'", "''")
                     + "', '"
-                    + aBugStatus +"');"
-                    + " INSERT INTO ReportedBy(UserID, BugID)"
-                    + " SELECT "
-                    + aUserID
-                    + ", MAX([ID]) FROM Bugs";
+                    + aBugStatus + "', " + aUserID + ")";
+ 
+                SqlCommand command = new SqlCommand(query, connection);
+                command.ExecuteNonQuery();
+
+                command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                aErrorStr = ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    aErrorStr += ex.Message;
+                }
+            }
+        }
+
+        //==============================================================
+        /// <summary>
+        /// Modifies the data for the existing bug in the DB.
+        /// </summary>
+        /// <param name="aBugInfo">The data about the bug</param>
+        /// <param name="aErrorStr">The description of a DB error</param>
+        public void SaveBugInfo(BugInfo aBugInfo,
+                                ref string aErrorStr)
+        {
+            string connStr = GetConfigValue("ConnString");
+
+            if (connStr == null)
+            {
+                aErrorStr = "No connection string specified";
+                return;
+            }
+
+            SqlConnection connection = new SqlConnection(connStr);
+
+            try
+            {
+                connection.Open();
+
+                string query = "UPDATE Bugs SET Title = '"
+                    + aBugInfo.Title.Replace("'", "''")
+                    + "', Description = '"
+                    + aBugInfo.Description.Replace("'", "''")
+                    + "', Status = '"
+                    + aBugInfo.Status + "' WHERE [ID] = " + aBugInfo.ID;
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.ExecuteNonQuery();
+
+                command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                aErrorStr = ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    aErrorStr += ex.Message;
+                }
+            }
+        }
+
+        //==============================================================
+        /// <summary>
+        /// Deletes a bug from the DB.
+        /// </summary>
+        /// <param name="aBugIS">The ID of the bug</param>
+        /// <param name="aErrorStr">The description of a DB error</param>
+        public void DeleteBug(string aBugID,
+                              ref string aErrorStr)
+        {
+            string connStr = GetConfigValue("ConnString");
+
+            if (connStr == null)
+            {
+                aErrorStr = "No connection string specified";
+                return;
+            }
+
+            SqlConnection connection = new SqlConnection(connStr);
+
+            try
+            {
+                connection.Open();
+
+                string query = "DELETE FROM Bugs WHERE [ID] = " + aBugID;
+
                 SqlCommand command = new SqlCommand(query, connection);
                 command.ExecuteNonQuery();
 

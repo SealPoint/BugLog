@@ -106,20 +106,50 @@
         {
             width: 150px;
         }
-        a{
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #333333;
-  padding: 2px 6px 2px 6px;
-
-}
-        .reportedStatus
+        
+        a
+        {
+            text-decoration: none;
+            background-color: #DDDDDD;
+            background: linear-gradient(#EEEEEE, #DDDDDD);
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+        }
+        
+        .statusRed
         {
             background-color: #FF5050;
+        }
+        
+        .statusYellow
+        {
+            background-color: #FFFF66;
+        }
+        
+        .statusGreen
+        {
+            background-color: #66FF66;
         }
     </style>
 </head>
 <body class="body">
+<%
+    if (!IsPostBack)
+    {
+        string delBugIDStr = Request["DelBugID"];
+
+        if (delBugIDStr != null)
+        {
+            string errorMsg = "";
+            WebSite.DBUtility.Instance().DeleteBug(delBugIDStr, ref errorMsg);
+
+            if (errorMsg.Length > 0)
+            {
+                Response.Write(errorMsg);
+            }
+        }
+    }
+ %>
     <form id="form1" runat="server">
         <div class="headerPad">
             Your Bugs
@@ -132,23 +162,53 @@
                         <th>Title/Description</th>
                         <th>Status</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <%
                     string errorStr = "";
-                    System.Collections.Generic.List<WebSite.BugInfo> bugs
-                        = WebSite.DBUtility.Instance().GetRecentBugs(Session["UserID"].ToString(),
-                                                                     ref errorStr);
 
-                    for (int i = 0; i < bugs.Count; ++i)
+                    if (Session["UserID"] != null)
                     {
-                        Response.Write("<tr>"
-                                       + "<td width=\"50\">Bug" + bugs[i].ID + "</td>"
-                                       + "<td>" + bugs[i].Title + "</td>"
-                                       + "<td class=\"reportedStatus\" width=\"70\">" + bugs[i].Status + "</td>"
-                                       + "<td padding=\"2px\" width=\"50\"><a href=\"SaveBug.aspx?BugID="
-                                       + bugs[i].ID + "\">View/Edit</a></td>"
-                                       + "</tr>");
+                        System.Collections.Generic.List<WebSite.BugInfo> bugs
+                            = WebSite.DBUtility.Instance().GetRecentBugs(Session["UserID"].ToString(),
+                                                                         ref errorStr);
+
+                        for (int i = 0; i < bugs.Count; ++i)
+                        {
+                            Response.Write("<tr>"
+                                            + "<td width=\"50\">Bug" + bugs[i].ID + "</td>"
+                                            + "<td>" + bugs[i].Title + "</td>"
+                                            + "<td class=\"status");
+                            
+                            switch (bugs[i].Status)
+                            {
+                                case "Reported":
+                                {
+                                    Response.Write("Red");
+                                    break;
+                                }
+                                case "In Progress":
+                                {
+                                    Response.Write("Yellow");
+                                    break;
+                                }
+                                case "Fixed":
+                                {
+                                    Response.Write("Green");
+                                    break;
+                                }
+                            }
+                                    
+                            Response.Write("\" width=\"70\">" + bugs[i].Status + "</td>"
+                                            + "<td padding=\"2px\" width=\"50\"><a href=\"SaveBug.aspx?BugID="
+                                            + bugs[i].ID + "\">View/Edit</a></td>"
+                                            + "<td align=\"center\" width=\"50\">"
+                                            + "<a href=\"ShowBugs.aspx?DelBugID="
+                                            + bugs[i].ID + "\">Delete</a>"
+                                            + "</td>"
+                                            + "</tr>");
+                        }
                     } 
                 %>
             </table>
