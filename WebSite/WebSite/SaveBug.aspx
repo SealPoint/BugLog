@@ -55,7 +55,7 @@
             width: 500px;
             height: 300px;
         }
-        .select
+        .customSelect
         {
             /* This will create a positioning context for the list of options */
             position: relative;
@@ -64,11 +64,11 @@
             display: inline-block;
         }
         
-        .select.active,
-        .select:focus
+        .customSelect.active,
+        .customSelect:focus
         {
             outline: none;
-            border: solid 2px #953735;
+            border: solid 1px #808080;
  
             /* This box-shadow property is not exactly required, however it's so important to be sure
             the active state is visible that we use it as a default value, feel free to override it. */
@@ -77,7 +77,7 @@
         
         /* The .select selector here is syntactic sugar to be sure the classes we define are
            the ones inside our widget. */
-        .select .optList
+        .customSelect .optList
         {
             /* This will make sure our list of options will be displayed below the value
                and out of the HTML flow */
@@ -86,7 +86,7 @@
             left: 0;
         }
         
-        .select .optList.hidden
+        .customSelect .optList.hidden
         {
             /* This is a simple way to hide the list in an accessible way, 
                we will talk more about accessibility in the end */
@@ -94,59 +94,59 @@
             visibility: hidden;
         }
         
-        .select
+        .customSelect
         {
-            /* All sizes will be expressed with the em value for accessibility reasons
-              (to make sure the widget remains resizable if the user uses the  
-               browser's zoom in a text-only mode). The computations are made
-               assuming 1em == 16px which is the default value in most browsers.
-               If you are lost with px to em conversion, try http://riddle.pl/emcalc/ */
-            font-size: 0.625em; /* this (10px) is the new font size context for em value in this context */
-            font-family: Verdana, Arial, sans-serif;
-
             -moz-box-sizing: border-box;
-            box-sizing: border-box;
+            box-sizing: content-box;
 
             /* We need extra room for the down arrow we will add */
-            padding: .1em 2.5em .2em .5em; /* 1px 25px 2px 5px */
-            width: 10em; /* 100px */
+            padding: 0 0 0 0;
+            width: 100px;
 
-            border: .2em solid #000; /* 2px */
+            border: .2em solid #000;
             /*box-shadow: 0 .1em .2em rgba(0,0,0,.45); 0 1px 2px */
         }
         
-        .select .value
+        .value
         {
             /* Because the value can be wider than our widget, we have to make sure it will not
                change the widget's width */
-            display: inline-block;
-            width: 100%;
+            display: block;
+            height: 17px;
             overflow: hidden;
+            padding: 0 0 0 0;
+            font-family: Calibri;
+            font-size: 11.5pt;
+            padding-left: 2px;
+            padding-bottom: 0;
 
-            vertical-align: top;
+            line-height: 17px;
 
             /* And if the content overflows, it's better to have a nice ellipsis. */
             white-space: nowrap;
             text-overflow: ellipsis;
+            background: #FFFFFF;
+            border: none;
         }
         
-        .select:after
+        .customSelect:after
         {
             content: ">"; /* We use the unicode caracter U+25BC; see http://www.utf8-chartable.de */
-            font: bold 17px "Consolas", monospace;
+            font: bold 20px "Consolas", monospace;
             transform: rotate(90deg);
             position: absolute;
             z-index: 1; /* This will be important to keep the arrow from overlapping the list of options */
-            top: -2px;
-            right: 2px;
-            
+            top: -1.5px;
+            right: 1px;
+            line-height: 18px;
+            padding-left: 2px;
 
             -moz-box-sizing: border-box;
             box-sizing: content-box;
 
             height: 20px;
-            width: 16px;  /* 20px */
-            vertical-align: middle;
+            width: 15px;  /* 20px */
+            text-align: middle;
 
             /*border-left: .2em solid #000; 2px */
 
@@ -156,10 +156,9 @@
             background: #D0D0D0;
             /*background: -webkit-linear-gradient(90deg, #E3E3E3, #fcfcfc);
             background: linear-gradient(270deg, #C0C0C0, #fcfcfc);*/
-            text-align: center;
         }
         
-        .select .optList
+        .customSelect .optList
         {
             z-index: 2; /* We explicitly said the list of options will always overlap the down arrow */
 
@@ -191,12 +190,12 @@
             background: #f0f0f0;
         }
         
-        .select .option
+        .customSelect .option
         {
             padding: .2em .3em; /* 2px 3px */
         }
 
-        .select .highlight
+        .customSelect .highlight
         {
             background: #000;
             color: #FFFFFF;
@@ -243,7 +242,7 @@
             // Because the deactivateSelect function fulfill all the requirement of the
             // forEach callback function, we use it directly without using an intermediate
             // anonymous function.
-            //selectList.forEach(deactivateSelect);
+            selectList.forEach(deactivateSelect);
 
             // And we turn on the active state for this specific widget
             select.classList.add('active');
@@ -302,11 +301,7 @@
         };
 
         window.addEventListener('load', function() {
-            var selectList = document.querySelectorAll('.select');
-
-            selectList[0].addEventListener('mouseover', function() {
-                activeSelect(selectList[0], selectList);
-            });
+            var selectList = document.querySelectorAll('.customSelect');
 
             // Each custom widget needs to be initialized
             selectList.forEach(function(select) {
@@ -345,6 +340,12 @@
                     // We activate the widget
                     activeSelect(select, selectList);
                 });
+
+                select.addEventListener('mouseover', function() {
+                    activeSelect(selectList[0], selectList);
+                });
+
+                deactivateSelect(select);
 
                 // We activate the widget
                 activeSelect(select, selectList);
@@ -389,7 +390,7 @@
                         <!-- This is our main container for our widget.
                              The tabindex attribute is what allows the user to focus the widget. 
                              We'll see later that it's better to set it through JavaScript. -->
-                        <asp:Panel runat="server" CssClass="select">
+                        <asp:Panel runat="server" CssClass="customSelect">
   
                             <!-- This container will be used to display the current value of the widget -->
                             <asp:Label runat="server" ID="BugStatus" CssClass="value">Cherry</asp:Label>
@@ -409,6 +410,7 @@
                         </asp:Panel>
                         <select>
                             <option selected="selected">Reported</option>
+                            <option>In progress</option>
                         </select>
                     </td>
                 </tr>
