@@ -11,6 +11,7 @@ namespace WebSite
     {
         protected void Page_Load (object aSender, EventArgs aEventArgs)
         {
+      
             if (Request["BugId"] != null)
             {
                 string errorMsg = "";
